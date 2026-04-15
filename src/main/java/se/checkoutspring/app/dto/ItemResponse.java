@@ -1,4 +1,8 @@
 package se.checkoutspring.app.dto;
 
-public class ItemResponse {
+public record ItemResponse (
+
+
+
+){
 }

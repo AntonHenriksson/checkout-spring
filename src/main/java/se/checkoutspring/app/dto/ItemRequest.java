@@ -1,4 +1,9 @@
 package se.checkoutspring.app.dto;
 
-public class ItemRequest {
+import java.math.BigDecimal;
+
+public record ItemRequest(
+        Long id,
+        BigDecimal price
+) {
 }
