@@ -3,7 +3,7 @@ package se.checkoutspring.app.dto;
 import java.math.BigDecimal;
 
 public record ItemRequest(
-        Long id,
+        Long productId,
         BigDecimal price
 ) {
 }

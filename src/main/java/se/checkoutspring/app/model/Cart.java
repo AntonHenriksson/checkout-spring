@@ -3,7 +3,6 @@ package se.checkoutspring.app.model;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +14,15 @@ public class Cart {
     private Long id;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @Column(unique = true, nullable = false)
+    private Long userId;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cart_id")
     private List<Item> items = new ArrayList<>();
 
-
-    private BigDecimal total;
-    private boolean canAfford;
-    private boolean hasPaid;
+    private boolean hasPaid = false;
 
     public Cart() {
 
@@ -35,27 +36,19 @@ public class Cart {
         this.items = items;
     }
 
-    public BigDecimal getTotal() {
-        return total;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public boolean isCanAfford() {
-        return canAfford;
+    public Long getId() {
+        return id;
     }
 
-    public void setCanAfford(boolean canAfford) {
-        this.canAfford = canAfford;
-    }
-
-    public boolean isHasPaid() {
-        return hasPaid;
-    }
-
-    public void setHasPaid(boolean hasPaid) {
-        this.hasPaid = hasPaid;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

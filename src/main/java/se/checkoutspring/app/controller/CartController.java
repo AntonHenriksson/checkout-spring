@@ -1,9 +1,10 @@
 package se.checkoutspring.app.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.checkoutspring.app.dto.CartResponse;
 import se.checkoutspring.app.dto.ItemRequest;
-import se.checkoutspring.app.dto.ItemResponse;
 import se.checkoutspring.app.service.CartService;
 
 @RestController
@@ -16,22 +17,26 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<ItemResponse> addToCart(@PathVariable Long userId, @RequestBody ItemRequest request) {
-        return null;
 
-        //servicemetod som adderar produkten till users cart
-        //om users cart inte existerar i h2 skapa users cart
-        //begär inte mer info än nödvändigt, inte carts roll att kräva
+    @PostMapping("/{userId}")
+    public ResponseEntity<CartResponse> addToCart(@PathVariable Long userId, @RequestBody ItemRequest request) {
+        CartResponse updatedCart = cartService.addToCart(userId, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedCart);
 
     }
 
     @DeleteMapping("/{userId}/items/{productId}")
-    public ResponseEntity<ItemResponse> removeFromCart(@PathVariable Long userId, @PathVariable Long productId) {
-        //om users cart inte existerar returna 404
-        //om item inte existerar returna 404
-        //annars radera item ifrån cart
-        return null;
+    public ResponseEntity<Void> removeFromCart(@PathVariable Long userId, @PathVariable Long productId) {
+        cartService.removeFromCart(userId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/items")
+    public ResponseEntity<CartResponse> getCart(@PathVariable Long userId) {
+        CartResponse updatedCart = cartService.getCart(userId);
+
+        return ResponseEntity.ok().body(updatedCart);
     }
 
     @PostMapping("/{userId}/checkout")
