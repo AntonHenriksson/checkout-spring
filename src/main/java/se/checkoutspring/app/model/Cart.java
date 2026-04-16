@@ -1,10 +1,7 @@
 package se.checkoutspring.app.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,7 +15,10 @@ public class Cart {
     private Long id;
 
 
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Item> items = new ArrayList<>();
+
+
     private BigDecimal total;
     private boolean canAfford;
     private boolean hasPaid;

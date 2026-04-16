@@ -1,0 +1,9 @@
+services:
+  cart-app:
+    build: .
+    container_name: spring_cart_app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
