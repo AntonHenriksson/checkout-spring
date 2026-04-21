@@ -5,16 +5,16 @@ import se.checkoutspring.app.model.Cart;
 
 public class CartMapper {
 
-    public static Cart createCartFromUserId(Long userId) {
+    public static Cart createCartFromUserId(String email) {
         Cart cart = new Cart();
-        cart.setUserId(userId);
+        cart.setUserEmail(email);
         return cart;
     }
 
     public static CartResponse toCartResponse(Cart cart) {
         return new CartResponse(
                 cart.getId(),
-                cart.getUserId(),
+                cart.getUserEmail(),
                 cart.getItems().stream().map(ItemMapper::toItemResponse).toList()
         );
     }

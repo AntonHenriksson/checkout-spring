@@ -21,12 +21,12 @@ public class CartService {
 
 
     @Transactional
-    public CartResponse addToCart(Long userId, ItemRequest request) {
+    public CartResponse addToCart(String userEmail, ItemRequest request) {
 
-        Cart cart = cartRepository.findByUserId(userId)
+        Cart cart = cartRepository.findByUserEmail(userEmail)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
-                    newCart.setUserId(userId);
+                    newCart.setUserEmail(userEmail);
                     return cartRepository.save(newCart);
                 });
 
@@ -39,15 +39,14 @@ public class CartService {
     }
 
     @Transactional
-    public void removeFromCart(Long userId, Long productId) {
+    public void removeFromCart(String userEmail, Long productId) {
 
-        Cart cart = cartRepository.findByUserId(userId)
+        Cart cart = cartRepository.findByUserEmail(userEmail)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
-                    newCart.setUserId(userId);
+                    newCart.setUserEmail(userEmail);
                     return cartRepository.save(newCart);
                 });
-
 
         Item itemToRemove = cart.getItems().stream()
                 .filter(item -> item.getId().equals(productId))
@@ -59,12 +58,13 @@ public class CartService {
     }
 
     @Transactional
-    public CartResponse getCart(Long userId) {
+    public CartResponse getCart(String userEmail) {
 
-        Cart cart = cartRepository.findByUserId(userId)
+
+        Cart cart = cartRepository.findByUserEmail(userEmail)
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
-                    newCart.setUserId(userId);
+                    newCart.setUserEmail(userEmail);
                     return cartRepository.save(newCart);
                 });
 

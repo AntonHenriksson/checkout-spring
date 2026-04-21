@@ -4,7 +4,7 @@ import java.util.List;
 
 public record CartResponse(
         Long id,
-        Long userId,
+        String userEmail,
         List<ItemResponse> items
 ) {
 }

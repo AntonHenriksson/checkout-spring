@@ -15,7 +15,7 @@ public class Cart {
 
 
     @Column(unique = true, nullable = false)
-    private Long userId;
+    private String userEmail;
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,12 +36,12 @@ public class Cart {
         this.items = items;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public Long getId() {

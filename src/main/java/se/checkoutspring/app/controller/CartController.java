@@ -18,29 +18,29 @@ public class CartController {
     }
 
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<CartResponse> addToCart(@PathVariable Long userId, @RequestBody ItemRequest request) {
-        CartResponse updatedCart = cartService.addToCart(userId, request);
+    @PostMapping("/{email}")
+    public ResponseEntity<CartResponse> addToCart(@PathVariable String email, @RequestBody ItemRequest request) {
+        CartResponse updatedCart = cartService.addToCart(email, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedCart);
 
     }
 
-    @DeleteMapping("/{userId}/items/{productId}")
-    public ResponseEntity<Void> removeFromCart(@PathVariable Long userId, @PathVariable Long productId) {
-        cartService.removeFromCart(userId, productId);
+    @DeleteMapping("/{email}/items/{productId}")
+    public ResponseEntity<Void> removeFromCart(@PathVariable String email, @PathVariable Long productId) {
+        cartService.removeFromCart(email, productId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{userId}/items")
-    public ResponseEntity<CartResponse> getCart(@PathVariable Long userId) {
-        CartResponse updatedCart = cartService.getCart(userId);
+    @GetMapping("/{email}/items")
+    public ResponseEntity<CartResponse> getCart(@PathVariable String email) {
+        CartResponse updatedCart = cartService.getCart(email);
 
         return ResponseEntity.ok().body(updatedCart);
     }
 
-    @PostMapping("/{userId}/checkout")
-    public ResponseEntity<String> checkout(@PathVariable String userId) {
+    @PostMapping("/{email}/checkout")
+    public ResponseEntity<String> checkout(@PathVariable String email) {
         // om userId balance >= cartCost { http200 }
         return null;
     }
