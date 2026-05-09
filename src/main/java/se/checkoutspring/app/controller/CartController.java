@@ -23,7 +23,7 @@ public class CartController {
         return ResponseEntity.ok("OK");
     }
 
-    @PostMapping("/{email}")
+    @PostMapping("/add")
     public ResponseEntity<CartResponse> addToCart(Authentication authentication, @RequestBody ItemRequest request) {
         String email = authentication.getName();
 
@@ -33,7 +33,7 @@ public class CartController {
 
     }
 
-    @DeleteMapping("/{email}/items/{productId}")
+    @DeleteMapping("/items/{productId}")
     public ResponseEntity<Void> removeFromCart(Authentication authentication, @PathVariable Long productId) {
         String email = authentication.getName();
 
@@ -41,7 +41,7 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{email}/items")
+    @GetMapping("/items")
     public ResponseEntity<CartResponse> getCart(Authentication authentication) {
         String email = authentication.getName();
         CartResponse updatedCart = cartService.getCart(email);
@@ -49,7 +49,7 @@ public class CartController {
         return ResponseEntity.ok().body(updatedCart);
     }
 
-    @PostMapping("/{email}/checkout")
+    @PostMapping("/checkout")
     public ResponseEntity<String> checkout(Authentication authentication) {
         String email = authentication.getName();
         // om userId balance >= cartCost { http200 }
