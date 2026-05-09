@@ -17,6 +17,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
+    }
 
     @PostMapping("/{email}")
     public ResponseEntity<CartResponse> addToCart(@PathVariable String email, @RequestBody ItemRequest request) {
