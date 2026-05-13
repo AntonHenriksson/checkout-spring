@@ -33,6 +33,7 @@ public class CartController {
 
     }
 
+    //todo change to database id or iterate in service
     @DeleteMapping("/items/{productId}")
     public ResponseEntity<Void> removeFromCart(Authentication authentication, @PathVariable Long productId) {
         String email = authentication.getName();

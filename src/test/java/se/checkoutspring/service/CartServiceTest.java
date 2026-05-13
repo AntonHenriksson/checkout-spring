@@ -7,12 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.checkoutspring.app.dto.CartResponse;
 import se.checkoutspring.app.dto.ItemRequest;
+import se.checkoutspring.app.dto.ProductResponse;
 import se.checkoutspring.app.model.Cart;
+import se.checkoutspring.app.model.Item;
 import se.checkoutspring.app.repo.CartRepository;
 import se.checkoutspring.app.service.CartService;
+import se.checkoutspring.app.service.ProductService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,15 +29,19 @@ public class CartServiceTest {
     @Mock
     private CartRepository cartRepository;
 
+    @Mock
+    private ProductService productService;
+
     @InjectMocks
     private CartService cartService;
+
 
     @Test
     void addToCartTest() {
 
         //Arrange
         String email = "test@mail.se";
-        ItemRequest request = new ItemRequest(1L, BigDecimal.valueOf(10));
+        ItemRequest request = new ItemRequest(1L);
 
         Cart cart = new Cart();
         cart.setId(1L);
@@ -60,14 +68,32 @@ public class CartServiceTest {
         expectedCart.setUserEmail(email);
         expectedCart.setId(1L);
 
+        Item item = new Item();
+        item.setProductId(101L);
+        expectedCart.setItems(new ArrayList<>(List.of(item)));
+
+        ProductResponse mockProduct = new ProductResponse(
+                101L, 11L, BigDecimal.valueOf(99.99), "Title", "Description", "clothes", "image.jpg"
+        );
+
         when(cartRepository.findByUserEmail(email)).thenReturn(Optional.of(expectedCart));
+        when(productService.fetchRealData(anyList())).thenReturn(List.of(mockProduct));
+
 
         //Act
         CartResponse result = cartService.getCart(email);
 
-        //Assert
+        // Assert
         assertNotNull(result);
+        assertEquals(email, result.userEmail());
+        assertEquals(1, result.items().size());
+
+
+        assertEquals("Title", result.items().get(0).title());
+        assertEquals(BigDecimal.valueOf(99.99), result.items().get(0).price());
+
         verify(cartRepository).findByUserEmail(email);
+        verify(productService).fetchRealData(anyList());
     }
 
 

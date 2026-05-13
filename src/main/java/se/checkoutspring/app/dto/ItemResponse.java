@@ -6,7 +6,11 @@ public record ItemResponse(
 
         Long id,
         Long productId,
-        BigDecimal price
+        BigDecimal price,
+        String title,
+        String description,
+        String category,
+        String image
 
 ) {
 }
