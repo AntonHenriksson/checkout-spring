@@ -2,6 +2,7 @@ package se.checkoutspring.app.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import se.checkoutspring.app.dto.CartResponse;
 import se.checkoutspring.app.dto.ItemRequest;
@@ -30,13 +31,17 @@ public class CartService {
     @Transactional
     public CartResponse addToCart(String userEmail, ItemRequest request) {
 
-        Cart cart = cartRepository.findByUserEmail(userEmail)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUserEmail(userEmail);
-                    return cartRepository.save(newCart);
-                });
-
+        Cart cart = cartRepository.findByUserEmail(userEmail).orElse(null);
+        if (cart == null) {
+            try {
+                Cart newCart = new Cart();
+                newCart.setUserEmail(userEmail);
+                cart = cartRepository.saveAndFlush(newCart);
+            } catch (DataIntegrityViolationException e) {
+                cart = cartRepository.findByUserEmail(userEmail)
+                        .orElseThrow(() -> new RuntimeException("Error creating cart"));
+            }
+        }
         Item newItem = ItemMapper.toItem(request);
         cart.getItems().add(newItem);
 
@@ -49,13 +54,17 @@ public class CartService {
     @Transactional
     public void removeFromCart(String userEmail, Long productId) {
 
-        Cart cart = cartRepository.findByUserEmail(userEmail)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUserEmail(userEmail);
-                    return cartRepository.save(newCart);
-                });
-
+        Cart cart = cartRepository.findByUserEmail(userEmail).orElse(null);
+        if (cart == null) {
+            try {
+                Cart newCart = new Cart();
+                newCart.setUserEmail(userEmail);
+                cart = cartRepository.saveAndFlush(newCart);
+            } catch (DataIntegrityViolationException e) {
+                cart = cartRepository.findByUserEmail(userEmail)
+                        .orElseThrow(() -> new RuntimeException("Error creating cart"));
+            }
+        }
         Item itemToRemove = cart.getItems().stream()
                 .filter(item -> item.getProductId().equals(productId))
                 .findFirst()
@@ -68,12 +77,17 @@ public class CartService {
     @Transactional
     public CartResponse getCart(String userEmail) {
 
-        Cart cart = cartRepository.findByUserEmail(userEmail)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUserEmail(userEmail);
-                    return cartRepository.save(newCart);
-                });
+        Cart cart = cartRepository.findByUserEmail(userEmail).orElse(null);
+        if (cart == null) {
+            try {
+                Cart newCart = new Cart();
+                newCart.setUserEmail(userEmail);
+                cart = cartRepository.saveAndFlush(newCart);
+            } catch (DataIntegrityViolationException e) {
+                cart = cartRepository.findByUserEmail(userEmail)
+                        .orElseThrow(() -> new RuntimeException("Error creating cart"));
+            }
+        }
 
         List<Long> productIds = cart.getItems().stream()
                 .map(Item::getProductId)
